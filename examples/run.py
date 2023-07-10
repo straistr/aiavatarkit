@@ -1,5 +1,7 @@
 import logging
 from aiavatar import AIAvatar, WakewordListener
+from aiavatar.speech.gcp_text_to_speeh import GCPTextToSpeechController
+from google.cloud import texttospeech
 
 GOOGLE_API_KEY = "YOUR_API_KEY"
 OPENAI_API_KEY = "YOUR_API_KEY"
@@ -22,12 +24,24 @@ system_message_content = """あなたは「joy」「angry」「sorrow」「fun�
 [face:joy]ねえ、海が見えるよ！[face:fun]早く泳ごうよ。
 """
 
+# Create Speech Controller
+voice = texttospeech.VoiceSelectionParams(
+        name="en-US-Neural2-G",
+        language_code="en-US",
+)
+audio_config = texttospeech.AudioConfig(
+    audio_encoding=texttospeech.AudioEncoding.LINEAR16
+)
+speech_controller = GCPTextToSpeechController(
+    voice_selection_params=voice,
+    audio_config=audio_config,
+)
+
 # Create AIAvatar
 app = AIAvatar(
     google_api_key=GOOGLE_API_KEY,
     openai_api_key=OPENAI_API_KEY,
-    voicevox_url=VV_URL,
-    voicevox_speaker_id=VV_SPEAKER,
+    speech_controller=speech_controller,
     system_message_content=system_message_content,
 )
 

@@ -9,7 +9,7 @@ from .processors.chatgpt import ChatGPTProcessor
 # Listener
 from .listeners.voicerequest import VoiceRequestListener
 # Avatar
-from .speech.voicevox import VoicevoxSpeechController
+from .speech.speech_controller import SpeechController
 from .animation import AnimationController, AnimationControllerDummy
 from .face import FaceController, FaceControllerDummy
 from .avatar import AvatarController
@@ -19,8 +19,7 @@ class AIAvatar:
         self,
         google_api_key: str,
         openai_api_key: str,
-        voicevox_url: str,
-        voicevox_speaker_id: int=46,
+        speech_controller: SpeechController,
         volume_threshold: int=3000,
         start_voice: str="どうしたの",
         functions: dict=None,
@@ -37,8 +36,6 @@ class AIAvatar:
 
         self.google_api_key = google_api_key
         self.openai_api_key = openai_api_key
-        self.voicevox_url = voicevox_url
-        self.voicevox_speaker_id = voicevox_speaker_id
         self.volume_threshold = volume_threshold
 
         # Audio Devices
@@ -79,7 +76,6 @@ class AIAvatar:
         self.request_listener = VoiceRequestListener(self.google_api_key, volume_threshold=volume_threshold, device_index=self.input_device)
 
         # Avatar
-        speech_controller = VoicevoxSpeechController(self.voicevox_url, self.voicevox_speaker_id, device_index=self.output_device)
         animation_controller = animation_controller or AnimationControllerDummy()
         face_controller = face_controller or FaceControllerDummy()
         self.avatar_controller = AvatarController(speech_controller, animation_controller, face_controller, avatar_request_parser)
