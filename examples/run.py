@@ -1,5 +1,6 @@
 import logging
 from aiavatar import AIAvatar, WakewordListener
+from aiavatar.device.audio import AudioDevice
 from aiavatar.speech.gcp_text_to_speeh import GCPTextToSpeechController
 from google.cloud import texttospeech
 
@@ -32,9 +33,26 @@ voice = texttospeech.VoiceSelectionParams(
 audio_config = texttospeech.AudioConfig(
     audio_encoding=texttospeech.AudioEncoding.LINEAR16
 )
+
+output_device = -1
+if isinstance(output_device, int):
+    if output_device < 0:
+        output_device_info = AudioDevice.get_default_output_device_info()
+        output_device = output_device_info["index"]
+    else:
+        output_device_info = AudioDevice.get_device_info(output_device)
+elif isinstance(output_device, str):
+    output_device_info = AudioDevice.get_output_device_by_name(output_device)
+    if output_device_info is None:
+        output_device_info = AudioDevice.get_default_output_device_info()
+    output_device = output_device_info["index"]
+
+logger.info(f"Output device: [{output_device}] {output_device_info['name']}")
+
 speech_controller = GCPTextToSpeechController(
     voice_selection_params=voice,
     audio_config=audio_config,
+    output_device=output_device,
 )
 
 # Create AIAvatar

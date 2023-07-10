@@ -32,7 +32,7 @@ class AIAvatar:
     ):
 
         self.logger = getLogger(__name__)
-        self.logger.addHandler(NullHandler())
+        # self.logger.addHandler(NullHandler())
 
         self.google_api_key = google_api_key
         self.openai_api_key = openai_api_key
@@ -53,21 +53,6 @@ class AIAvatar:
 
         self.input_device = input_device
         self.logger.info(f"Input device: [{input_device}] {input_device_info['name']}")
-
-        if isinstance(output_device, int):
-            if output_device < 0:
-                output_device_info = AudioDevice.get_default_output_device_info()
-                output_device = output_device_info["index"]
-            else:
-                output_device_info = AudioDevice.get_device_info(output_device)
-        elif isinstance(output_device, str):
-            output_device_info = AudioDevice.get_output_device_by_name(output_device)
-            if output_device_info is None:
-                output_device_info = AudioDevice.get_default_output_device_info()
-            output_device = output_device_info["index"]
-
-        self.output_device = output_device
-        self.logger.info(f"Output device: [{output_device}] {output_device_info['name']}")
 
         # Processor
         self.chat_processor = ChatGPTProcessor(self.openai_api_key, functions=functions, system_message_content=system_message_content)
