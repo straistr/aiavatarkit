@@ -2,7 +2,7 @@ import asyncio
 from logging import getLogger, NullHandler
 import re
 from typing import Callable
-from .speech import SpeechController
+from .speech.speech_controller import SpeechController
 from .animation import AnimationController
 from .face import FaceController
 

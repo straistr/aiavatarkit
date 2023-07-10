@@ -52,7 +52,7 @@ logger.info(f"Output device: [{output_device}] {output_device_info['name']}")
 speech_controller = GCPTextToSpeechController(
     voice_selection_params=voice,
     audio_config=audio_config,
-    output_device=output_device,
+    device_index=output_device,
 )
 
 # Create AIAvatar
